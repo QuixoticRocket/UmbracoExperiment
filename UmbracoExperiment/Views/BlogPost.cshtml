@@ -1,0 +1,30 @@
+﻿@inherits Umbraco.Web.Mvc.UmbracoTemplatePage
+@{
+    Layout = "Master.cshtml";
+}
+<div class="blog-post">
+    <h2 class="blog-post-title">@CurrentPage.blogTitle</h2>
+    <p class="blog-post-meta">@CurrentPage.CreateDate.ToString("dd MMMM yyyy") by <a href="#">@CurrentPage.CreatorName</a></p>
+    <span>@CurrentPage.AsDynamic().content</span>
+</div>
+<div class="container-fluid text-center">
+    @{
+        var prevsiblings = Model.Content.Siblings().Where(x => x.CreateDate < CurrentPage.CreateDate).OrderBy(x => x.CreateDate);
+        var nextsiblings = Model.Content.Siblings().Where(x => x.CreateDate > CurrentPage.CreateDate).OrderBy(x => x.CreateDate);
+
+        if (prevsiblings.Count() > 0)
+        {
+            <span class="text-left">
+                <a href="@prevsiblings.Last().Url">&lt;&lt; Previous post - @prevsiblings.Last().CreateDate</a>
+            </span>
+        }
+        <span class="text-center">&nbsp;||&nbsp;</span>
+        if (nextsiblings.Count() > 0)
+        {
+            <span class="text-right">
+                <a href="@nextsiblings.First().Url">@nextsiblings.First().CreateDate - Next post &gt;&gt;</a>
+            </span>
+        }
+    }
+
+</div>
